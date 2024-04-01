@@ -10,9 +10,10 @@ export class PostUserRepository extends BaseMemoryRepository<PostUserEntity> {
     super(entityFactory);
   }
 
-  public findByEmail(email: string): PostUserEntity | null {
+  public async findByEmail(email: string): Promise<PostUserEntity | null> {
     const entities = Array.from(this.entities.values());
     const user = entities.find((entity) => entity.email === email);
-    return user? this.entityFactory.create(user) : null;
+
+    return user ? this.entityFactory.create(user) : null;
   }
 }

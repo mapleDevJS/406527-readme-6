@@ -12,28 +12,29 @@ export class AuthenticationService {
   ) {}
 
   public async register(dto: CreateUserDto): Promise<PostUserEntity> {
-    const {email, firstname, lastname, password, avatar} = dto;
+    const {email, firstname, lastname, password} = dto;
 
-    const blogUser = {
-      email, firstname, lastname, avatar, passwordHash: ''
+    const postUser = {
+      email, firstname, lastname, avatar: '', passwordHash: ''
     };
 
-    const existUser = this.postUserRepository.findByEmail(email);
+    const existUser = await this.postUserRepository.findByEmail(email);
 
     if (existUser) {
       throw new ConflictException(AUTH_USER_EXISTS);
     }
 
-    const userEntity = await new PostUserEntity(blogUser)
+    const userEntity = await new PostUserEntity(postUser)
       .setPassword(password)
 
     await this.postUserRepository.save(userEntity);
+
     return userEntity;
   }
 
   public async verifyUser(dto: LoginUserDto) {
     const {email, password} = dto;
-    const existUser = this.postUserRepository.findByEmail(email);
+    const existUser = await this.postUserRepository.findByEmail(email);
 
     if (!existUser) {
       throw new NotFoundException(AUTH_USER_NOT_FOUND);
