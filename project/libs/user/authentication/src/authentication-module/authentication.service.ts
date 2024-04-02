@@ -3,7 +3,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { PostUserRepository, PostUserEntity } from '@project/post-user';
 
 import { CreateUserDto } from '../dto/create-user.dto';
-import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './authentication.constant';
+import { AUTH_USER } from './authentication.constant';
 import { LoginUserDto } from '../dto/login-user.dto';
 @Injectable()
 export class AuthenticationService {
@@ -21,7 +21,7 @@ export class AuthenticationService {
     const existUser = await this.postUserRepository.findByEmail(email);
 
     if (existUser) {
-      throw new ConflictException(AUTH_USER_EXISTS);
+      throw new ConflictException(AUTH_USER.EXISTS);
     }
 
     const userEntity = await new PostUserEntity(postUser)
@@ -37,11 +37,11 @@ export class AuthenticationService {
     const existUser = await this.postUserRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+      throw new NotFoundException(AUTH_USER.NOT_FOUND);
     }
 
     if (!await existUser.comparePassword(password)) {
-      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+      throw new UnauthorizedException(AUTH_USER.PASSWORD_WRONG);
     }
 
     return existUser;
