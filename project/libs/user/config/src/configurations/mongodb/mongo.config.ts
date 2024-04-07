@@ -1,5 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
+import {MongoConfiguration} from "./mongo.env";
+import { plainToClass } from 'class-transformer';
 
 const DEFAULT_MONGO_PORT = 27017;
 
@@ -28,17 +30,18 @@ function validateMongoConfig(config: MongoConfig): void {
   }
 }
 
-function getDbConfig(): MongoConfig {
-  const config: MongoConfig = {
+async function getDbConfig(): Promise<MongoConfiguration> {
+  const config = plainToClass(MongoConfiguration, {
     host: process.env.MONGO_HOST,
     name: process.env.MONGO_DB,
-    port: parseInt(process.env.MONGO_PORT ?? `${DEFAULT_MONGO_PORT}`, 10),
+    port: process.env.MONGO_PORT ? parseInt(process.env.MONGO_PORT, 10) : DEFAULT_MONGO_PORT,
     user: process.env.MONGO_USER,
     password: process.env.MONGO_PASSWORD,
-    authBase: process.env.MONGO_AUTH_BASE,
-  };
+    authBase: process.env.MONGO_AUTH_BASE
+  });
 
-  validateMongoConfig(config);
+  await config.validate();
+
   return config;
 }
 
