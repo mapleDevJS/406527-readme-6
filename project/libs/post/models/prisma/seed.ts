@@ -35,6 +35,8 @@ function getPosts() {
           userId: SECOND_USER_ID,
         },
       ],
+      status: 'Published',
+      isReposted: true,
     },
     {
       id: SECOND_POST_UUID,
@@ -55,11 +57,13 @@ function getPosts() {
           userId: SECOND_USER_ID,
         },
       ],
+      status: 'Draft',
+      isReposted: false,
     },
   ];
 }
 
-function generatePostData(post: any) {
+function generatePostData(post) {
   return {
     id: post.id,
     title: post.title,
@@ -78,7 +82,9 @@ function generatePostData(post: any) {
         create: post.comments,
       }
       : undefined,
-  }
+      status: post.status,
+      isReposted: post.isReposted,
+      }
 }
 
 function generateLikeData(like: any) {
