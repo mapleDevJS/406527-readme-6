@@ -36,7 +36,7 @@ model Post {
   currentAuthorId  String     @map("current_author_id")
   originalAuthorId String?    @map("original_author_id")
   tags             String[]
-  likes            String[]
+  likes            Like[]
   isReposted       Boolean
   videoUrl         String?    @map("video_url") // only video post
   announcement     String? // only text post
@@ -47,8 +47,33 @@ model Post {
   link             String? // only link post
   linkDescription  String?    @map("link_description") // only link post
   originalPostId   String?    @map("original_post_Id")
-  // comments           Comment[]
+  comments         Comment[]
 
   @@index([title])
   @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  message   String
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  postId    String   @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([postId])
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([userId, postId])
+  @@map("likes")
 }
