@@ -34,7 +34,7 @@ model Post {
   createdAt        DateTime   @default(now()) @map("created_at")
   updatedAt        DateTime   @updatedAt @map("updated_at")
   status           PostStatus
-  currentAuthorId  String     @map("current_author_id")
+  userId  String     @map("user_id")
   originalAuthorId String?    @map("original_author_id")
   tags             String[]
   likes            Like[]
