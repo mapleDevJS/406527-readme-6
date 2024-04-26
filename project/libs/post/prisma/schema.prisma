@@ -27,27 +27,28 @@ enum PostStatus {
 }
 
 model Post {
-  id               String     @id @default(uuid())
+  id               String     @id @default(uuid()) @map("id")
   type             PostType
   title            String
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
   status           PostStatus
   currentAuthorId  String     @map("current_author_id")
   originalAuthorId String?    @map("original_author_id")
   tags             String[]
   likes            String[]
   isReposted       Boolean
-  videoUrl        String? @map("video_url") // only video post
-  announcement    String? // only text post
-  text            String? // only text post
-  textQuote       String? @map("text_quote") // only quote post
-  quoteAuthor     String? @map("quote_author") // only quote post
-  imageUrl        String? @map("image_url") // only photo post
-  link            String? // only link post
-  linkDescription String? @map("link_description") // only link post
-  originalPostId String? @map("original_post_Id")
+  videoUrl         String?    @map("video_url") // only video post
+  announcement     String? // only text post
+  text             String? // only text post
+  textQuote        String?    @map("text_quote") // only quote post
+  quoteAuthor      String?    @map("quote_author") // only quote post
+  imageUrl         String?    @map("image_url") // only photo post
+  link             String? // only link post
+  linkDescription  String?    @map("link_description") // only link post
+  originalPostId   String?    @map("original_post_Id")
   // comments           Comment[]
 
   @@index([title])
+  @@map("posts")
 }
